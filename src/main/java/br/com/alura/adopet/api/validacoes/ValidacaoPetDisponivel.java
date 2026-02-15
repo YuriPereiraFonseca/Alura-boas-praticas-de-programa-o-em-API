@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class ValidacaoPetDisponivel implements ValidacaoSolicitacaoAdocao {
 
-
     @Autowired
     private PetRepository petRepository;
 
@@ -20,4 +19,5 @@ public class ValidacaoPetDisponivel implements ValidacaoSolicitacaoAdocao {
             throw new ValidacaoException("Pet já foi adotado!");
         }
     }
+
 }

@@ -28,23 +28,23 @@ public class Adocao {
 
     private String justificativaStatus;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Adocao adocao = (Adocao) o;
-        return Objects.equals(id, adocao.id);
-    }
-
-    public Adocao() {
-    }
-
     public Adocao(Tutor tutor, Pet pet, String motivo) {
         this.tutor = tutor;
         this.pet = pet;
         this.motivo = motivo;
         this.status = StatusAdocao.AGUARDANDO_AVALIACAO;
         this.data = LocalDateTime.now();
+    }
+
+    public Adocao() {
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Adocao adocao = (Adocao) o;
+        return Objects.equals(id, adocao.id);
     }
 
     @Override
@@ -56,37 +56,34 @@ public class Adocao {
         return id;
     }
 
-
     public LocalDateTime getData() {
         return data;
     }
-
 
     public Tutor getTutor() {
         return tutor;
     }
 
-
     public Pet getPet() {
         return pet;
     }
 
+    public void setPet(Pet pet) {
+        this.pet = pet;
+    }
 
     public String getMotivo() {
         return motivo;
     }
 
-
     public StatusAdocao getStatus() {
         return status;
     }
-
 
     public String getJustificativaStatus() {
         return justificativaStatus;
     }
 
-    
     public void marcarComoAprovada() {
         this.status = StatusAdocao.APROVADO;
     }
@@ -96,4 +93,3 @@ public class Adocao {
         this.justificativaStatus = justificativa;
     }
 }
-

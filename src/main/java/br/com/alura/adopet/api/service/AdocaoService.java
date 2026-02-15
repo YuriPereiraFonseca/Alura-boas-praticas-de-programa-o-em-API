@@ -16,12 +16,11 @@ import org.springframework.stereotype.Service;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-
 @Service
 public class AdocaoService {
 
     @Autowired
-    private EmailService emailService;
+    private AdocaoRepository repository;
 
     @Autowired
     private PetRepository petRepository;
@@ -30,11 +29,10 @@ public class AdocaoService {
     private TutorRepository tutorRepository;
 
     @Autowired
-    private AdocaoRepository repository;
+    private EmailService emailService;
 
     @Autowired
     private List<ValidacaoSolicitacaoAdocao> validacoes;
-
 
     public void solicitar(SolicitacaoAdocaoDto dto) {
         Pet pet = petRepository.getReferenceById(dto.idPet());
@@ -43,6 +41,7 @@ public class AdocaoService {
         validacoes.forEach(v -> v.validar(dto));
 
         Adocao adocao = new Adocao(tutor, pet, dto.motivo());
+        repository.save(adocao);
 
         emailService.enviarEmail(
                 adocao.getPet().getAbrigo().getEmail(),
@@ -54,13 +53,11 @@ public class AdocaoService {
         Adocao adocao = repository.getReferenceById(dto.idAdocao());
         adocao.marcarComoAprovada();
 
-
         emailService.enviarEmail(
                 adocao.getPet().getAbrigo().getEmail(),
                 "Adoção aprovada",
                 "Parabéns " + adocao.getTutor().getNome() + "!\n\nSua adoção do pet " + adocao.getPet().getNome() + ", solicitada em " + adocao.getData().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")) + ", foi aprovada.\nFavor entrar em contato com o abrigo " + adocao.getPet().getAbrigo().getNome() + " para agendar a busca do seu pet.");
     }
-
 
     public void reprovar(ReprovacaoAdocaoDto dto) {
         Adocao adocao = repository.getReferenceById(dto.idAdocao());
@@ -68,7 +65,7 @@ public class AdocaoService {
 
         emailService.enviarEmail(
                 adocao.getPet().getAbrigo().getEmail(),
-                "Adoção reprovada",
+                "Solicitação de adoção",
                 "Olá " + adocao.getTutor().getNome() + "!\n\nInfelizmente sua adoção do pet " + adocao.getPet().getNome() + ", solicitada em " + adocao.getData().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")) + ", foi reprovada pelo abrigo " + adocao.getPet().getAbrigo().getNome() + " com a seguinte justificativa: " + adocao.getJustificativaStatus());
     }
 
